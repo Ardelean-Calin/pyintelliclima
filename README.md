@@ -17,11 +17,13 @@ Its main use is for my corresponding WIP HomeAssistant integration which I hope 
 It can be extended to include other devices from IntelliClima in the future, but I only own the 
 ECOCOMFORT, so I cannot add any others. Feel free to submit a PR for additional devices.
 
+This API was made by reverse engineering the cloud API, through the use of an android emulator and proxy to catch the Intelliclima+ app traffic. As such, no public API exists and the functionality of this module breaks if the API changes.
+
 ## Credits
 
 This was highly inspired by: https://github.com/ruizmarc/homebridge-intelliclima
 
-Partial credit for the reverse engineering of the API goes to them.
+Partial credit for the reverse engineering process of the API goes to them.
 
 * * *
 
