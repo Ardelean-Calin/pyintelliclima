@@ -4,6 +4,8 @@ from enum import StrEnum
 API_BASE_URL = "https://intelliclima.fantinicosmi.it"
 API_MONO = "/server_v1_mono/api/"
 
+REFRESH_DELAY = 5  # seconds
+
 
 class FanSpeed(StrEnum):
     """Fan speed options for EcoComfort VMC devices."""

@@ -1,5 +1,6 @@
 """API client for IntelliClima integration."""
 
+import asyncio
 import binascii
 import hashlib
 import json
@@ -11,7 +12,7 @@ from typing import Any, Literal
 from aiohttp import ClientError, ClientSession
 from dacite import from_dict
 
-from .const import API_BASE_URL, API_MONO
+from .const import API_BASE_URL, API_MONO, REFRESH_DELAY
 from .intelliclima_types import (
     IntelliClimaDevices,
     IntelliClimaECO,
@@ -129,6 +130,8 @@ class IntelliClimaEcocomfortAPI:
             msg = f"Setting mode and speed did not succeed with status: {status}"
             raise IntelliClimaAPIError(msg)
 
+        # Necessary delay for device status to actually update to the set mode and speed
+        await asyncio.sleep(REFRESH_DELAY)
         return True
 
     async def set_mode_speed_auto(self, device_sn: str) -> bool:
