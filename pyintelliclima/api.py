@@ -12,7 +12,7 @@ from typing import Any, Literal
 from aiohttp import ClientError, ClientSession
 from dacite import from_dict
 
-from .const import API_BASE_URL, API_MONO, REFRESH_DELAY
+from .const import API_BASE_URL, API_MONO, REFRESH_DELAY, FanMode, FanSpeed
 from .intelliclima_types import (
     IntelliClimaDevices,
     IntelliClimaECO,
@@ -67,7 +67,7 @@ def checksum_crc8_nrsc5(data_bytes: bytearray, poly: Literal[49] = 0x31, init: L
     return crc
 
 
-def create_mode_speed_command(device_sn: str, mode: str, speed: str) -> str:
+def create_mode_speed_command(device_sn: str, mode: FanMode, speed: FanSpeed) -> str:
     """Creates the api request command that sets mode and speed for a certain device."""
     LOGGER.debug(
         "Setting mode & speed for device %s to mode: %s, speed %s",
@@ -108,9 +108,9 @@ class IntelliClimaEcocomfortAPI:
 
     async def turn_off(self, device_sn: str) -> bool:
         """Turn off an ECOCOMFORT 2.0 device."""
-        return await self.set_mode_speed(device_sn, mode="00", speed="00")
+        return await self.set_mode_speed(device_sn, mode=FanMode.off, speed=FanSpeed.off)
 
-    async def set_mode_speed(self, device_sn: str, mode: str, speed: str) -> bool:
+    async def set_mode_speed(self, device_sn: str, mode: FanMode, speed: FanSpeed) -> bool:
         """Set the mode and speed of an ecocomfort device."""
         command = create_mode_speed_command(device_sn, mode, speed)
         payload = {"trama": command}
@@ -136,7 +136,7 @@ class IntelliClimaEcocomfortAPI:
 
     async def set_mode_speed_auto(self, device_sn: str) -> bool:
         """Set the auto preset mode and speed."""
-        return await self.set_mode_speed(device_sn, mode="04", speed="10")
+        return await self.set_mode_speed(device_sn, mode=FanMode.sensor, speed=FanSpeed.auto_set)
 
 
 class IntelliClimaAPI:
@@ -253,6 +253,9 @@ class IntelliClimaAPI:
                 device_data["config"] = json.loads(device_data.get("config", "{}"))
             except (KeyError, json.JSONDecodeError):
                 device_data["config"] = device_data.get("config")
+
+            device_data["mode_set"] = FanMode(device_data["mode_set"])
+            device_data["speed_set"] = FanSpeed(device_data["speed_set"])
 
             eco_device = from_dict(data_class=IntelliClimaECO, data=device_data)
             eco_devices[eco_device.id] = eco_device

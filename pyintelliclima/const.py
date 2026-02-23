@@ -15,7 +15,8 @@ class FanSpeed(StrEnum):
     low = "2"
     medium = "3"
     high = "4"
-    auto = "16"
+    auto_get = "16"  # The value when getting device status that indicates auto mode
+    auto_set = "10"  # The value used when sending the command to set the device to auto mode
 
 
 class FanMode(StrEnum):

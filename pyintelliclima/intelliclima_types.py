@@ -4,6 +4,8 @@ import json
 from dataclasses import asdict, dataclass
 from typing import Literal
 
+from pyintelliclima.const import FanMode, FanSpeed
+
 # ruff: noqa: N815
 
 
@@ -134,9 +136,9 @@ class IntelliClimaECO:
     model: IntelliClimaModelType
     name: str
     houses_id: str
-    mode_set: str
+    mode_set: FanMode
     mode_state: str
-    speed_set: str
+    speed_set: FanSpeed
     speed_state: str
     last_online: str
     creation_date: str
